@@ -1,9 +1,12 @@
 <template>
-  <main class="columns is-gapless is-multiline">
+  <main
+    class="columns is-gapless is-multiline"
+    :class="{ 'dark-theme': darkThemeActive }"
+  >
     <div class="column is-one-fifth">
-      <Sidebar />
+      <Sidebar @changeColor="toggleTheme" />
     </div>
-    <div class="column is-four-fifth">
+    <div class="column is-four-fifth content">
       <Form @onSaveTask="saveTask" />
       <div class="list">
         <Box v-if="ExistTask"> Ainda não existem tarefas </Box>
@@ -32,9 +35,13 @@ export default defineComponent({
   data() {
     return {
       tasks: [] as ITask[],
+      darkThemeActive: false,
     };
   },
   methods: {
+    toggleTheme(stateDarkTheme: boolean) {
+      this.darkThemeActive = stateDarkTheme;
+    },
     saveTask(task: ITask) {
       this.tasks.push(task);
     },
@@ -48,6 +55,20 @@ export default defineComponent({
 </script>
 
 <style lang="scss">
+main {
+  --bg-primary: #fff;
+  --text-primary: #000;
+}
+
+main.dark-theme {
+  --bg-primary: #2b2b42;
+  --text-primary: #ddd;
+}
+
+.content {
+  background-color: var(--bg-primary);
+}
+
 .list {
   padding: 1.25rem;
 }

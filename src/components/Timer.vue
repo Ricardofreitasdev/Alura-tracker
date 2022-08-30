@@ -23,4 +23,11 @@ export default defineComponent({
 });
 </script>
 
-<style></style>
+<style>
+section strong {
+  color: var(--text-primary);
+  background: var(--bg-primary);
+  padding: 4px;
+  border-radius: 4px;
+}
+</style>

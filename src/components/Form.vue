@@ -1,5 +1,5 @@
 <template>
-  <div class="box">
+  <div class="box form">
     <div class="columns">
       <div
         class="column is-8"
@@ -51,5 +51,10 @@ export default defineComponent({
   display: flex;
   justify-content: space-between;
   align-items: center;
+}
+
+.form {
+  color: var(--text-primary);
+  background: var(--bg-primary);
 }
 </style>
