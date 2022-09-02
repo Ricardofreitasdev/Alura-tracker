@@ -4,6 +4,16 @@
       <img src="../assets/logo.png" alt="" />
     </h1>
     <button @click="changeTheme" class="button">{{ textButton }}</button>
+    <nav class="panel mt-5">
+      <ul>
+        <li>
+          <router-link to="/"> Tarefas </router-link>
+        </li>
+        <li>
+          <router-link to="/projetos"> Projetos </router-link>
+        </li>
+      </ul>
+    </nav>
   </header>
 </template>
 
@@ -54,6 +64,12 @@ header {
     justify-content: center;
     img {
       max-width: 75px;
+    }
+  }
+
+  nav {
+    a {
+      color: #fff;
     }
   }
 }

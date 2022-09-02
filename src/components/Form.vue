@@ -2,7 +2,7 @@
   <div class="box form">
     <div class="columns">
       <div
-        class="column is-8"
+        class="column is-5"
         role="form"
         aria-label="Formulario de nova tarefa"
       >
@@ -14,6 +14,21 @@
         />
       </div>
 
+      <div class="column is-3">
+        <div class="select">
+          <select v-model="idProject">
+            <option value="">Selecione o projeto</option>
+            <option
+              :value="project.id"
+              v-for="project in projects"
+              :key="project.id"
+            >
+              {{ project.name }}
+            </option>
+          </select>
+        </div>
+      </div>
+
       <div class="column form-align">
         <ViewTimer @endTimer="endTask" />
       </div>
@@ -22,8 +37,10 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from "vue";
+import { computed, defineComponent } from "vue";
 import ViewTimer from "./ViewTimer.vue";
+import { useStore } from "vuex";
+import { key } from "@/store";
 
 export default defineComponent({
   name: "Form",
@@ -32,6 +49,7 @@ export default defineComponent({
   data() {
     return {
       task: "",
+      idProject: "",
     };
   },
   methods: {
@@ -39,9 +57,16 @@ export default defineComponent({
       this.$emit("onSaveTask", {
         timeInSeconds: time,
         description: this.task,
+        project: this.projects.find((proj) => proj.id == this.idProject),
       });
       this.task = "";
     },
+  },
+  setup() {
+    const store = useStore(key);
+    return {
+      projects: computed(() => store.state.projects),
+    };
   },
 });
 </script>
