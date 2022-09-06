@@ -7,6 +7,7 @@
       <Sidebar @changeColor="toggleTheme" />
     </div>
     <div class="column is-four-fifth content">
+      <Messages />
       <router-view> </router-view>
     </div>
   </main>
@@ -15,11 +16,13 @@
 <script lang="ts">
 import { defineComponent } from "vue";
 import Sidebar from "./components/Sidebar.vue";
+import Messages from "./components/Messages.vue";
 
 export default defineComponent({
   name: "App",
   components: {
     Sidebar,
+    Messages,
   },
   data() {
     return {

@@ -1,8 +1,18 @@
 <template>
   <Timer :timeSeconds="timeSeconds" />
   <section>
-    <TimerButton @clicked="init" texto="Play" :active="isActive" />
-    <TimerButton @clicked="end" texto="Stop" :active="!isActive" />
+    <TimerButton
+      icon="fa fa-play"
+      @clicked="init"
+      texto="Play"
+      :active="isActive"
+    />
+    <TimerButton
+      icon="fa fa-square"
+      @clicked="end"
+      texto="Stop"
+      :active="!isActive"
+    />
   </section>
 </template>
 

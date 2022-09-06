@@ -37,7 +37,9 @@
 </template>
 
 <script lang="ts">
-import { computed, defineComponent } from "vue";
+import { computed, defineComponent, ref } from "vue";
+import { TypeMessage } from "@/interfaces/IMessage";
+import useSendMessage from "@/hooks/notifier";
 import ViewTimer from "./ViewTimer.vue";
 import { useStore } from "vuex";
 import { key } from "@/store";
@@ -46,26 +48,42 @@ export default defineComponent({
   name: "Form",
   emits: ["onSaveTask"],
   components: { ViewTimer },
-  data() {
-    return {
-      task: "",
-      idProject: "",
-    };
-  },
-  methods: {
-    endTask(time: number): void {
-      this.$emit("onSaveTask", {
-        timeInSeconds: time,
-        description: this.task,
-        project: this.projects.find((proj) => proj.id == this.idProject),
-      });
-      this.task = "";
-    },
-  },
-  setup() {
+
+  methods: {},
+  setup(_, { emit }) {
     const store = useStore(key);
+    const { sendMessage } = useSendMessage();
+
+    const task = ref("");
+    const idProject = ref("");
+    const projects = computed(() => store.state.project.projetcs);
+
+    const endTask = (time: number): void => {
+      if (!idProject.value) {
+        sendMessage(
+          "Erro",
+          "Antes de finalizar, escolha o projeto",
+          TypeMessage.FAIL
+        );
+
+        return;
+      }
+
+      emit("onSaveTask", {
+        timeInSeconds: time,
+        description: task.value,
+        project: projects.value.find((proj) => proj.id == idProject.value),
+      });
+      task.value = "";
+    };
+
     return {
-      projects: computed(() => store.state.projects),
+      store,
+      sendMessage,
+      task,
+      idProject,
+      endTask,
+      projects,
     };
   },
 });

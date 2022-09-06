@@ -1,6 +1,5 @@
 <template>
-  <section class="projects">
-    <h1 class="title">Projetos</h1>
+  <section>
     <form @submit.prevent="save">
       <div class="field">
         <label for="projectName" class="label"> Nome do Projeto </label>
@@ -19,8 +18,13 @@
 </template>
 
 <script lang="ts">
+import { UPDATE_PROJECT } from "@/store/type-mutations";
+import { TypeMessage } from "@/interfaces/IMessage";
+import { CREATE_PROJECT } from "@/store/actions";
+import useSendMessage from "@/hooks/notifier";
+import { defineComponent, ref } from "vue";
+import { useRouter } from "vue-router";
 import { useStore } from "@/store";
-import { defineComponent } from "vue";
 
 export default defineComponent({
   name: "ProjectForm",
@@ -29,44 +33,54 @@ export default defineComponent({
       type: String,
     },
   },
-  data() {
-    return {
-      projectName: "",
-      project: "",
-    };
-  },
-  mounted() {
-    if (this.id) {
-      const item = this.store.state.projects.find((proj) => proj.id == this.id);
-      this.projectName = item?.name || "";
-    }
-  },
-  methods: {
-    save() {
-      if (this.id) {
-        this.store.commit("UPDATE_PROJECT", {
-          id: this.id,
-          name: this.projectName,
-        });
-      } else {
-        this.store.commit("ADD_PROJECT", this.projectName);
-      }
-      this.projectName = "";
-      this.$router.push("/projetos");
-    },
-  },
-
-  setup() {
+  setup(props) {
+    const router = useRouter();
     const store = useStore();
+    const { sendMessage } = useSendMessage();
+    const projectName = ref("");
+
+    if (props.id) {
+      const item = store.state.project.projetcs.find(
+        (proj) => proj.id == props.id
+      );
+
+      projectName.value = item?.name || "";
+    }
+
+    const sucessReturn = () => {
+      projectName.value = "";
+
+      sendMessage(
+        "Projeto foi salvo",
+        "Projeto disponível",
+        TypeMessage.SUCCESS
+      );
+
+      router.push("/projetos");
+    };
+
+    const save = () => {
+      if (props.id) {
+        store
+          .dispatch(UPDATE_PROJECT, {
+            id: props.id,
+            name: projectName.value,
+          })
+          .then(() => sucessReturn());
+      } else {
+        store
+          .dispatch(CREATE_PROJECT, projectName.value)
+          .then(() => sucessReturn());
+      }
+    };
+
     return {
-      store,
+      sucessReturn,
+      projectName,
+      save,
     };
   },
 });
 </script>
 
-<style lang="scss" scoped>
-.projects {
-  padding: 1.25rem;
-}
-</style>
+<style lang="scss" scoped></style>

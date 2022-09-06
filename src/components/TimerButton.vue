@@ -1,6 +1,6 @@
 <template>
   <button class="button" @click="press" :disabled="active">
-    <span>{{ texto }}</span>
+    <i :class="icon"></i>
   </button>
 </template>
 
@@ -9,7 +9,7 @@ import { defineComponent } from "vue";
 export default defineComponent({
   name: "TImerButton",
   props: {
-    texto: {
+    icon: {
       type: String,
       required: true,
     },
